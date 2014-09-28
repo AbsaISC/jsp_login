@@ -14,18 +14,31 @@
     <body>
 
         <%
-            if(session.getAttribute("user")==null){
+            if (session.getAttribute("user") == null) {
                 response.sendRedirect("index.jsp");
             }
             if (request.getParameter("sessionClose") == null) {
-                
+
                 session = request.getSession();
                 out.print("Bienvenido "
                         + session.getAttribute("user"));
         %>
+        <table style="border: solid blue" align="Center">
+
+            <tbody>
+                <%for (int i = 1; i < 101; i++) {%>   
+                <tr >
+                <%for (int j = 1; j < 101; j++) {%>
+                <td style="border: dashed greenyellow;"><%=j*i%></td>
+                <%}%>
+                </tr>
+                <%}%>
+            </tbody>
+        </table>
+
         <form>
-        <input type="hidden" name="sessionClose" value="true">
-        <input type="submit" value="logout" formaction="principal.jsp" formmethod="post">
+            <input type="hidden" name="sessionClose" value="true">
+            <input type="submit" value="logout" formaction="principal.jsp" formmethod="post">
         </form>
         <%} else {
                 session.removeAttribute("user");
