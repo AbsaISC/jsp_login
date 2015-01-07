@@ -5,8 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%--<%@page isErrorPage="true" %>--%>
-<%--<%@page errorPage="error.jsp?de=login.jsp"%>--%>
+<%--<%@page isErrorPage="true" %>
+<%@page errorPage="error.jsp?de=login.jsp"%>--%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,30 +15,30 @@
     </head>
     <body>
         <%!
-            static int cont = 0;
+            static boolean isUser=true;
 
             public boolean doCheckout(String user, String pass) {
-//                if (user.equalsIgnoreCase("Absalom")) {
-//                    if (pass.equalsIgnoreCase("absa")) {
-//                        return true;
-//                    }
-//                }
-//                return false;
-                return true;
+                if (user.equalsIgnoreCase("Absalom")) {
+                    if (pass.equalsIgnoreCase("root")) {
+                        return true;
+                    }
+                }
+                return false;
             }
         %>
         <%
             String user = request.getParameter("user");
             String pass = request.getParameter("pass");
-            if(session.getAttribute("user")!=null){
+            if (session.getAttribute("user") != null) {
                 response.sendRedirect("principal.jsp");
             }
             if (user == null) {
-                if (cont != 0) {
+                if (!isUser) {
                     out.println("Error al introducir el Usuario y contraseña");
+                    isUser=true;
                 }
-                
-                
+
+
         %>
         <div>
             <fieldset>
@@ -47,11 +47,11 @@
                     <table class="tabla" >
                         <tr>
                             <th>User:</th>
-                            <td><input type="text" name="user" id="txtUsuario" class="caja" placeholder="password"/></td>
+                            <td><input type="text" name="user" id="txtUsuario" class="caja" placeholder="user"/></td>
                         </tr>
                         <tr>
                             <th>Password:</th>
-                            <td><input type="password" name="pass" id="txtClave" class="caja" placeholder="user"/></td>
+                            <td><input type="password" name="pass" id="txtClave" class="caja" placeholder="pass"/></td>
                         </tr>
                         <tr>
                             <td colspan="2">
@@ -62,18 +62,16 @@
                 </form>
             </fieldset>
         </div>
-        <%
-            } else {
+        <%            } else {
 //logica para verificar los datos del usuario
-                if (!doCheckout(request.getParameter("user"), request.getParameter("pass"))) {
-                    response.sendRedirect("index.jsp");
-                    cont++;
-                } else {
+                if (doCheckout(request.getParameter("user"), request.getParameter("pass"))) {
                     session = request.getSession();
                     session.setAttribute("user", user);
                     session.setAttribute("pass", pass);
                     response.sendRedirect("principal.jsp");
-                    cont=0;
+                } else {
+                    response.sendRedirect("index.jsp");
+                    isUser=false;
                 }
             }
         %>
